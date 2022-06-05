@@ -19,7 +19,15 @@ function definir_proposicoes(){
 })
 console.log(proposicoes)
 }
-
+function criando_elemento_resposta(element_1,sinal,element_2,validade){
+    var div = document.createElement("div")
+    var resposta = document.createElement("p")
+    div.classList.add("resposta")
+    var body = document.querySelector(".secao")
+    resposta.innerHTML =  element_1+sinal+element_2+" == "+validade
+    div.appendChild(resposta);
+    body.appendChild(div)    
+}
 function verificando_contra(input){
     var ocorrencias = []
     var inicio_busca = 0
@@ -60,9 +68,9 @@ function verificando_AND(input){
             var posicao_elemento_1 = proposicoes.indexOf(ele_1)
             var posicao_elemento_2 = proposicoes.indexOf(ele_2)
             if(proposicoes[posicao_elemento_1+1] == true && proposicoes[posicao_elemento_2+1] == true){
-                console.log(letras[pesquisa_sinal-3]+letras[pesquisa_sinal-2]+letras[pesquisa_sinal-1]+" == VERDADEIRO ")
+                criando_elemento_resposta(letras[pesquisa_sinal-3],letras[pesquisa_sinal-2],letras[pesquisa_sinal-1], true)
             }else{
-                console.log(letras[pesquisa_sinal-3]+letras[pesquisa_sinal-2]+letras[pesquisa_sinal-1]+" == FALSO")
+                criando_elemento_resposta(letras[pesquisa_sinal-3],letras[pesquisa_sinal-2],letras[pesquisa_sinal-1], false)
             }            
             inicio_busca_expressao = pesquisa_sinal+1         
         }    
@@ -87,9 +95,9 @@ function verificando_OU(input){
             var posicao_elemento_1 = proposicoes.indexOf(ele_1)
             var posicao_elemento_2 = proposicoes.indexOf(ele_2)
             if(proposicoes[posicao_elemento_1+1] == false && proposicoes[posicao_elemento_2+1] == false){
-                console.log(letras[pesquisa_sinal-3]+letras[pesquisa_sinal-2]+letras[pesquisa_sinal-1]+" == FALSO ")
+                criando_elemento_resposta(letras[pesquisa_sinal-3],letras[pesquisa_sinal-2],letras[pesquisa_sinal-1], false)
             }else{
-                console.log(letras[pesquisa_sinal-3]+letras[pesquisa_sinal-2]+letras[pesquisa_sinal-1]+" == VERDADEIRO")
+                criando_elemento_resposta(letras[pesquisa_sinal-3],letras[pesquisa_sinal-2],letras[pesquisa_sinal-1], true)
             }            
             inicio_busca_expressao = pesquisa_sinal+1         
         }
@@ -113,10 +121,10 @@ function  verificando_condicional(input){
             var ele_2 = letras[pesquisa_sinal-1]
             var posicao_elemento_1 = proposicoes.indexOf(ele_1)
             var posicao_elemento_2 = proposicoes.indexOf(ele_2)
-            if(proposicoes[posicao_elemento_1+1] == true && proposicoes[posicao_elemento_2+1] == false){
-                console.log(letras[pesquisa_sinal-3]+letras[pesquisa_sinal-2]+"> "+letras[pesquisa_sinal-1]+" == FALSO ")
+            if(proposicoes[posicao_elemento_1+1] == true && proposicoes[posicao_elemento_2+1] == true){
+                criando_elemento_resposta(letras[pesquisa_sinal-3],"->",letras[pesquisa_sinal-1], false)
             }else{
-                console.log(letras[pesquisa_sinal-3]+letras[pesquisa_sinal-2]+"> "+letras[pesquisa_sinal-1]+" == VERDADEIRO")
+                criando_elemento_resposta(letras[pesquisa_sinal-3],"->",letras[pesquisa_sinal-1], true)
             }            
             inicio_busca_expressao = pesquisa_sinal+1         
         }
@@ -141,9 +149,9 @@ function verificando_bicondicional(input){
             var posicao_elemento_1 = proposicoes.indexOf(ele_1)
             var posicao_elemento_2 = proposicoes.indexOf(ele_2)
             if((proposicoes[posicao_elemento_1+1] == true && proposicoes[posicao_elemento_2+1] == true) || (proposicoes[posicao_elemento_1+1] == false && proposicoes[posicao_elemento_2+1] == false)){
-                console.log(letras[pesquisa_sinal-3]+letras[pesquisa_sinal-2]+" <-> "+letras[pesquisa_sinal-1]+" == VERDADEIRO")
+                criando_elemento_resposta(letras[pesquisa_sinal-3],"<->",letras[pesquisa_sinal-1], true)
             }else{
-                console.log(letras[pesquisa_sinal-3]+" <-> "+letras[pesquisa_sinal-1]+" == FALSO")
+                criando_elemento_resposta(letras[pesquisa_sinal-3],"<->",letras[pesquisa_sinal-1], false)
             }            
             inicio_busca_expressao = pesquisa_sinal+1         
         }

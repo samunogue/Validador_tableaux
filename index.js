@@ -186,7 +186,6 @@ function simplificando_expressão(){
     console.log(expressoes)
     expressoes.forEach(Element =>{
         var expressao = Element.join("");
-        // CORRETOS => ^ V
         if(expressao.indexOf("^") != -1){
             verificando_AND(expressao)
         }else if(expressao.indexOf("v") != -1 ){
@@ -205,3 +204,7 @@ function adicionar_input(){
 botoes.forEach(Element =>{
     Element.addEventListener("click", adicionar_input)
 })
+function metodo_final(){
+    definir_proposicoes()
+    simplificando_expressão()
+}

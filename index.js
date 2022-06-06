@@ -6,27 +6,35 @@ function definir_proposicoes(){
     const input = document.querySelector("div").innerHTML
     var array_input = input.split("")
     array_input.forEach(Element =>{
-        if(proposicoes.indexOf(Element) != -1){
-            var decisao = prompt(Element+" == Digite se o elemento é verdadeiro ou falso. Use (V) ou (F)");
-            if(decisao  == "V"){
-                proposicoes[proposicoes.indexOf(Element)+1] = true
-            }else if(decisao  == "F"){
-                proposicoes[proposicoes.indexOf(Element)+1] = false
-            }else{
-                alert("Resposta inválida")
+        console.log(Element+proposicoes)
+        var posicao = proposicoes.indexOf(Element)
+        if(posicao != -1){
+            if(proposicoes[posicao+1] === ""){
+                var decisao = prompt(Element+" == Digite se o elemento é verdadeiro ou falso. Use (V) ou (F)");
+                if(decisao  == "V"){
+                    proposicoes[posicao+1] = true
+                }else if(decisao  == "F"){
+                    proposicoes[posicao+1] = false
+                }else{
+                    alert("Resposta inválida")
+                }
             }
         }     
 })
-console.log(proposicoes)
 }
 function criando_elemento_resposta(element_1,sinal,element_2,validade){
     var div = document.createElement("div")
     var resposta = document.createElement("p")
     div.classList.add("resposta")
-    var body = document.querySelector(".secao")
+    var section = document.querySelector(".secao_resposta")
     resposta.innerHTML =  element_1+sinal+element_2+" == "+validade
+    if(validade == true){
+        div.style.borderColor = ("green")
+    }else{
+        div.style.borderColor = ("red")
+    }
     div.appendChild(resposta);
-    body.appendChild(div)    
+    section.appendChild(div)    
 }
 function verificando_contra(input){
     var ocorrencias = []
@@ -183,18 +191,22 @@ function simplificando_expressão(){
         }
         expressoes.push(expressao)
     }
+    console.log("ANTES DA FUNCAO  "+proposicoes)
     console.log(expressoes)
     expressoes.forEach(Element =>{
-        var expressao = Element.join("");
-        if(expressao.indexOf("^") != -1){
-            verificando_AND(expressao)
-        }else if(expressao.indexOf("v") != -1 ){
-            verificando_OU(expressao)
-        }else if(expressao.indexOf("&lt;-&gt;") != -1){
-            verificando_bicondicional(expressao)
-        }else if(expressao.indexOf("-&gt;") != -1){
-            verificando_condicional(expressao)
+        var expressao = Element.join(""); 
+        if(expressao.indexOf("~") != -1){ verificando_contra(expressao) }
+        var expressao_sem_contra = expressao.replace(/~/g, "")
+        if(expressao_sem_contra.indexOf("^") != -1){
+            verificando_AND(expressao_sem_contra)
+        }else if(expressao_sem_contra.indexOf("v") != -1 ){
+            verificando_OU(expressao_sem_contra)
+        }else if(expressao_sem_contra.indexOf("&lt;-&gt;") != -1){
+            verificando_bicondicional(expressao_sem_contra)
+        }else if(expressao_sem_contra.indexOf("-&gt;") != -1){
+            verificando_condicional(expressao_sem_contra)
         }
+        console.log("DEPOIS DA FUNCAO  "+proposicoes)  
     })
 }
 function adicionar_input(){

@@ -306,13 +306,36 @@ function expressao_composta(){
             if(valores_verdade.indexOf("false") != -1){
                 criando_elemento_resposta_composta(expressoes_respondidas[0]," ^ ",expressoes_respondidas[1],false)
             }else{ criando_elemento_resposta_composta(expressoes_respondidas[0]," ^ ",expressoes_respondidas[1],true)}
-        }/*/else if(Element == "v"){
-            verificando_OU(expressao_sem_contra)
+        }else if(Element == ")v("){
+            var valores_verdade = []
+            for(i=0;i<expressoes_respondidas.length;i++){
+                if(expressoes_respondidas[i].indexOf("true") != -1){ valores_verdade.push("true")}
+                if(expressoes_respondidas[i].indexOf("false") != -1){ valores_verdade.push("false")}
+            }
+            if(valores_verdade.indexOf("true") != -1){
+                criando_elemento_resposta_composta(expressoes_respondidas[0]," v ",expressoes_respondidas[1],true)
+            }else{ criando_elemento_resposta_composta(expressoes_respondidas[0]," v ",expressoes_respondidas[1],false)}
+
         }else if(Element == "&lt;-&gt;"){
-            verificando_bicondicional(expressao_sem_contra)
+            var valores_verdade = []
+            for(i=0;i<expressoes_respondidas.length;i++){
+                if(expressoes_respondidas[i].indexOf("true") != -1){ valores_verdade.push("true")}
+                if(expressoes_respondidas[i].indexOf("false") != -1){ valores_verdade.push("false")}
+            }
+            if((valores_verdade.indexOf("true") != -1 && valores_verdade.indexOf("false") == -1) || (valores_verdade.indexOf("false") != -1 && valores_verdade.indexOf("true") == -1)){
+                criando_elemento_resposta_composta(expressoes_respondidas[0]," &lt;-&gt; ",expressoes_respondidas[1],true)
+            }else{ criando_elemento_resposta_composta(expressoes_respondidas[0]," &lt;-&gt; ",expressoes_respondidas[1],false)}
+        
         }else if(Element == "-&gt;"){
-            verificando_condicional(expressao_sem_contra)
-        }/*/
+            var valores_verdade = []
+            for(i=0;i<expressoes_respondidas.length;i++){
+                if(expressoes_respondidas[i].indexOf("true") != -1){ valores_verdade.push("true")}
+                if(expressoes_respondidas[i].indexOf("false") != -1){ valores_verdade.push("false")}
+            }
+            if(valores_verdade.indexOf("true") === 0 && valores_verdade.indexOf("false") === 1){
+                criando_elemento_resposta_composta(expressoes_respondidas[0]," -&gt; ",expressoes_respondidas[1],false)
+            }else{ criando_elemento_resposta_composta(expressoes_respondidas[0]," -&gt; ",expressoes_respondidas[1],true)}
+        }
     })
     
 }

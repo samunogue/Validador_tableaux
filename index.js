@@ -4,6 +4,7 @@ var botao_excluir = document.querySelector(".apagar")
 var regras_tableaux = [/~/g,/T/g,/V/g,/->/g,/<->/g,/=/]
 var regras_escrita = ["AA","BB","CC","DD","AB","AC","AD","BA","BC","BD","CA","CB","CD","DA","DB","DC","A(","B(","C(","D(","()","(v","(^","(->","(<->","^)","~)","->)","<->)","v)","vv","~~","^^","->->","<-><->","~v","~^","~->","~<->","v^","v->","v<->","^v","^->","^<->","->v","->^","-><->","<->^","<->v","<->->","A~A","A~B","A~C","A~D","B~A","B~B","B~D","C~A","C~B","C~C","C~D","D~A","D~B","D~C","D~D"]
 var proposicoes = ["A","","B","","C","","D",""]
+var expressoes_respondidas = []
 function verificar_sintaxe(){
     var conteudo_input = input.innerHTML;
     var validador_escrita = true
@@ -24,7 +25,6 @@ function definir_proposicoes(){
     const input = document.querySelector("div").innerHTML
     var array_input = input.split("")
     array_input.forEach(Element =>{
-        console.log(Element+proposicoes)
         var posicao = proposicoes.indexOf(Element)
         if(posicao != -1){
             if(proposicoes[posicao+1] === ""){
@@ -51,8 +51,24 @@ function criando_elemento_resposta(element_1,sinal,element_2,validade){
     }else{
         div.style.borderColor = ("red")
     }
+    expressoes_respondidas.push(resposta.innerHTML)
     div.appendChild(resposta);
     section.appendChild(div)    
+}
+function criando_elemento_resposta_composta(element_1,sinal,element_2,validade){
+    var div = document.createElement("div")
+    var resposta = document.createElement("p")
+    div.classList.add("resposta")
+    var section = document.querySelector(".secao_resposta")
+    resposta.innerHTML =  element_1+sinal+element_2+" == "+validade
+    if(validade == true){
+        div.style.borderColor = ("green")
+    }else{
+        div.style.borderColor = ("red")
+    }
+    expressoes_respondidas.push(resposta.innerHTML)
+    div.appendChild(resposta);
+    section.appendChild(div)
 }
 function verificando_contra(input){
     var ocorrencias = []
@@ -223,13 +239,82 @@ function simplificando_expressão(){
             verificando_bicondicional(expressao_sem_contra)
         }else if(expressao_sem_contra.indexOf("-&gt;") != -1){
             verificando_condicional(expressao_sem_contra)
-        }
-        console.log("DEPOIS DA FUNCAO  "+proposicoes)  
+        }  
     })
+    console.log("DEPOIS DA FUNCAO  "+proposicoes) 
 }
 function adicionar_input(){
     var cont = input.innerHTML
     input.innerHTML = cont + this.getAttribute("data-valor")
+}
+function expressao_composta(){
+    var input = document.querySelector(".visor").innerHTML
+    var termos = [")v(",")^(",")-&gt;(",")&lt;-&gt;("]
+    var validar_termo = false
+    var termos_encontrados = []
+    termos.forEach(Element =>{
+        if(input.indexOf(Element) != -1){validar_termo = true, termos_encontrados.push(Element)}
+    })
+    var inicio_busca = 0
+    var expressoes = []
+    var posicao_pares = []
+    if(validar_termo === true){
+        for(c=0;c<input.length;i++){
+            var par_1 = input.indexOf("(", inicio_busca)
+            if(par_1 == -1){ break }
+            posicao_pares.push(par_1)
+            var par_2 = input.indexOf(")", inicio_busca)
+            posicao_pares.push(par_2)
+            inicio_busca = par_2+1
+            var expressao = []
+            var array_input = input.split("")
+            var validador_de_captura = false
+            for(i=0;i<array_input.length; i++){
+                var elemento = array_input[i]
+                if(par_2 > i && i > par_1){
+                    validador_de_captura = true 
+                }else{ validador_de_captura = false }            
+                
+                if(validador_de_captura == true){
+                    expressao.push(elemento)
+                }
+            }
+            expressoes.push(expressao)
+        }
+    }
+    expressoes.forEach(Element =>{
+        var expressao = Element.join(""); 
+        if(expressao.indexOf("~") != -1){ verificando_contra(expressao) }
+        var expressao_sem_contra = expressao.replace(/~/g, "")
+        if(expressao_sem_contra.indexOf("^") != -1){
+            verificando_AND(expressao_sem_contra)
+        }else if(expressao_sem_contra.indexOf("v") != -1 ){
+            verificando_OU(expressao_sem_contra)
+        }else if(expressao_sem_contra.indexOf("&lt;-&gt;") != -1){
+            verificando_bicondicional(expressao_sem_contra)
+        }else if(expressao_sem_contra.indexOf("-&gt;") != -1){
+            verificando_condicional(expressao_sem_contra)
+        } 
+    })
+    termos_encontrados.forEach(Element =>{
+        if(Element === ")^("){
+            var valores_verdade = []
+            for(i=0;i<expressoes_respondidas.length;i++){
+                if(expressoes_respondidas[i].indexOf("true") != -1){ valores_verdade.push("true")}
+                if(expressoes_respondidas[i].indexOf("false") != -1){ valores_verdade.push("false")}
+            }
+            if(valores_verdade.indexOf("false") != -1){
+                criando_elemento_resposta_composta(expressoes_respondidas[0]," ^ ",expressoes_respondidas[1],false)
+            }else{ criando_elemento_resposta_composta(expressoes_respondidas[0]," ^ ",expressoes_respondidas[1],true)}
+        }/*/else if(Element == "v"){
+            verificando_OU(expressao_sem_contra)
+        }else if(Element == "&lt;-&gt;"){
+            verificando_bicondicional(expressao_sem_contra)
+        }else if(Element == "-&gt;"){
+            verificando_condicional(expressao_sem_contra)
+        }/*/
+    })
+    
 }
 botoes.forEach(Element =>{
     Element.addEventListener("click", adicionar_input)
@@ -238,5 +323,15 @@ botoes.forEach(Element =>{
 botao_excluir.addEventListener("click", verificar_sintaxe)
 function metodo_final(){
     definir_proposicoes()
-    simplificando_expressão()
+    const input = document.querySelector(".visor").innerHTML
+    var termos_usados = [")v(",")^(",")-&gt;(",")&lt;-&gt;("]
+    var validador_expressao_composta = false
+    termos_usados.forEach(Element =>{
+        if(input.indexOf(Element) != -1){validador_expressao_composta = true}
+    })
+    if(validador_expressao_composta === true){
+        expressao_composta()
+    }else{
+        simplificando_expressão()
+    }
 }

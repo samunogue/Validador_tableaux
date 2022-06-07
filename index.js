@@ -1,7 +1,25 @@
 const input = document.querySelector(".visor")
 var botoes = document.querySelectorAll(".botao");
+var botao_excluir = document.querySelector(".apagar")
 var regras_tableaux = [/~/g,/T/g,/V/g,/->/g,/<->/g,/=/]
+var regras_escrita = ["AA","BB","CC","DD","AB","AC","AD","BA","BC","BD","CA","CB","CD","DA","DB","DC","A(","B(","C(","D(","()","(v","(^","(->","(<->","^)","~)","->)","<->)","v)","vv","~~","^^","->->","<-><->","~v","~^","~->","~<->","v^","v->","v<->","^v","^->","^<->","->v","->^","-><->","<->^","<->v","<->->","A~A","A~B","A~C","A~D","B~A","B~B","B~D","C~A","C~B","C~C","C~D","D~A","D~B","D~C","D~D"]
 var proposicoes = ["A","","B","","C","","D",""]
+function verificar_sintaxe(){
+    var conteudo_input = input.innerHTML;
+    var validador_escrita = true
+    for(i=0;i<regras_escrita.length;i++){
+        if(conteudo_input.indexOf(regras_escrita[i]) != -1){ validador_escrita = false }
+    }
+    if(validador_escrita == false){
+        input.style.borderColor = "red"
+    }else if(validador_escrita == true){
+        input.style.borderColor = "green"
+    }
+}
+function excluir_digito(){
+    var resultado = document.querySelector('.visor').innerHTML;
+    document.querySelector('.visor').innerHTML = resultado.substring(0, resultado.length -1);
+}
 function definir_proposicoes(){
     const input = document.querySelector("div").innerHTML
     var array_input = input.split("")
@@ -215,7 +233,9 @@ function adicionar_input(){
 }
 botoes.forEach(Element =>{
     Element.addEventListener("click", adicionar_input)
+    Element.addEventListener("click", verificar_sintaxe)
 })
+botao_excluir.addEventListener("click", verificar_sintaxe)
 function metodo_final(){
     definir_proposicoes()
     simplificando_expressão()

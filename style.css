@@ -31,16 +31,28 @@
 button{
     width: 10vw;
     height: 5vh;
+    border: solid 2px black;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    transition:  0.5s all;
+}
+button:hover{
+    cursor: pointer;
+    transform: scale(1.1);
 }
 .secao_resposta{
-    display: flex;
-    flex-direction: row;
+    background-color: white;
+    display: none;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1vw;
     position: absolute;
-    top: 70%;
-    left: 30%;
+    top: 40%;
+    left: 34%;
+    padding: 2vh 2vw 1vh;
+    border-radius: 10px;
+    border: solid 3px black;
 }
 .resposta{
     width: fit-content;

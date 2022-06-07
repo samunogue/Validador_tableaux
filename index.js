@@ -1,8 +1,7 @@
 const input = document.querySelector(".visor")
 var botoes = document.querySelectorAll(".botao");
 var botao_excluir = document.querySelector(".apagar")
-var regras_tableaux = [/~/g,/T/g,/V/g,/->/g,/<->/g,/=/]
-var regras_escrita = ["AA","BB","CC","DD","AB","AC","AD","BA","BC","BD","CA","CB","CD","DA","DB","DC","A(","B(","C(","D(","()","(v","(^","(->","(<->","^)","~)","->)","<->)","v)","vv","~~","^^","->->","<-><->","~v","~^","~->","~<->","v^","v->","v<->","^v","^->","^<->","->v","->^","-><->","<->^","<->v","<->->","A~A","A~B","A~C","A~D","B~A","B~B","B~D","C~A","C~B","C~C","C~D","D~A","D~B","D~C","D~D"]
+var regras_escrita = ["AA","BB","CC","DD","AB","AC","AD","BA","BC","BD","CA","CB","CD","DA","DB","DC","A(","B(","C(","D(","()","(v","(^","(-&gt;","(&lt;-&gt;","^)","~)","-&gt;)","&lt;-&gt;)","v)","vv","~~","^^","-&gt;-&gt;","&lt;-&gt;&lt;-&gt;","~v","~^","~-&gt;","~&lt;-&gt;","v^","v-&gt;","v&lt;-&gt;","^v","^-&gt;","^&lt;-&gt;","-&gt;v","-&gt;^","-&gt;&lt;-&gt;","&lt;-&gt;^","&lt;-&gt;v","&lt;-&gt;-&gt;","A~A","A~B","A~C","A~D","B~A","B~B","B~D","C~A","C~B","C~C","C~D","D~A","D~B","D~C","D~D"]
 var proposicoes = ["A","","B","","C","","D",""]
 var expressoes_respondidas = []
 function verificar_sintaxe(){
@@ -51,6 +50,7 @@ function criando_elemento_resposta(element_1,sinal,element_2,validade){
     }else{
         div.style.borderColor = ("red")
     }
+    document.querySelector(".secao_resposta").style.display = "flex"
     expressoes_respondidas.push(resposta.innerHTML)
     div.appendChild(resposta);
     section.appendChild(div)    
@@ -66,6 +66,7 @@ function criando_elemento_resposta_composta(element_1,sinal,element_2,validade){
     }else{
         div.style.borderColor = ("red")
     }
+    document.querySelector(".secao_resposta").style.display = "flex"
     expressoes_respondidas.push(resposta.innerHTML)
     div.appendChild(resposta);
     section.appendChild(div)
@@ -163,7 +164,7 @@ function  verificando_condicional(input){
             var ele_2 = letras[pesquisa_sinal-1]
             var posicao_elemento_1 = proposicoes.indexOf(ele_1)
             var posicao_elemento_2 = proposicoes.indexOf(ele_2)
-            if(proposicoes[posicao_elemento_1+1] == true && proposicoes[posicao_elemento_2+1] == true){
+            if(proposicoes[posicao_elemento_1+1] == true && proposicoes[posicao_elemento_2+1] == false){
                 criando_elemento_resposta(letras[pesquisa_sinal-3],"->",letras[pesquisa_sinal-1], false)
             }else{
                 criando_elemento_resposta(letras[pesquisa_sinal-3],"->",letras[pesquisa_sinal-1], true)
@@ -316,7 +317,7 @@ function expressao_composta(){
                 criando_elemento_resposta_composta(expressoes_respondidas[0]," v ",expressoes_respondidas[1],true)
             }else{ criando_elemento_resposta_composta(expressoes_respondidas[0]," v ",expressoes_respondidas[1],false)}
 
-        }else if(Element == "&lt;-&gt;"){
+        }else if(Element == ")&lt;-&gt;("){
             var valores_verdade = []
             for(i=0;i<expressoes_respondidas.length;i++){
                 if(expressoes_respondidas[i].indexOf("true") != -1){ valores_verdade.push("true")}
@@ -326,7 +327,7 @@ function expressao_composta(){
                 criando_elemento_resposta_composta(expressoes_respondidas[0]," &lt;-&gt; ",expressoes_respondidas[1],true)
             }else{ criando_elemento_resposta_composta(expressoes_respondidas[0]," &lt;-&gt; ",expressoes_respondidas[1],false)}
         
-        }else if(Element == "-&gt;"){
+        }else if(Element == ")-&gt;("){
             var valores_verdade = []
             for(i=0;i<expressoes_respondidas.length;i++){
                 if(expressoes_respondidas[i].indexOf("true") != -1){ valores_verdade.push("true")}
@@ -346,6 +347,7 @@ botoes.forEach(Element =>{
 botao_excluir.addEventListener("click", verificar_sintaxe)
 function metodo_final(){
     definir_proposicoes()
+
     const input = document.querySelector(".visor").innerHTML
     var termos_usados = [")v(",")^(",")-&gt;(",")&lt;-&gt;("]
     var validador_expressao_composta = false
